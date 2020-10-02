@@ -5,6 +5,11 @@ const { notes } = require('./data/notes');
 const PORT = process.env.PORT || 3001;
 const app = express();
 
+// parse incoming string or array data
+app.use(express.urlencoded({ extended: true }));
+// parse incoming JSON data
+app.use(express.json());
+
 function filterByQuery(query, notesArray) {
     let filteredResults = notesArray;
     if (query.title) {
@@ -21,7 +26,7 @@ function findById(id, notesArray) {
     return result;
 }
 
-// Routes
+// Routes GET
 app.get('/api/notes', (req, res) => {
     let results = notes; 
     if (req.query) {
@@ -37,6 +42,13 @@ app.get('/api/notes/:id', (req, res) => {
     } else {
         res.send(404);
     }
+});
+
+// Routes Post
+app.post('/api/notes', (req, res) => {
+    // req.body is where our incoming content will be
+    console.log(req.body);
+    res.json(req.body);
 });
 
 app.listen(PORT, () => {
