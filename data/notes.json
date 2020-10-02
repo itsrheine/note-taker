@@ -1,0 +1,14 @@
+{
+    "notes": [
+        {
+            "id": "0",
+            "title": "Today's Notes",
+            "text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci rem id fuga, dolorem esse fugit est harum consequatur itaque autem, ducimus commodi perspiciatis omnis quae iusto facere optio libero incidunt!"
+        },
+        {
+            "id": "1",
+            "title": "Tomorrow's Notes",
+            "text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci rem id fuga, dolorem esse fugit est harum consequatur itaque autem, ducimus commodi perspiciatis omnis quae iusto facere optio libero incidunt!"
+        }
+    ]
+}
