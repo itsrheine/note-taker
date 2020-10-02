@@ -11,6 +11,8 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 // parse incoming JSON data
 app.use(express.json());
+// html
+app.use(express.static('public'));
 
 function filterByQuery(query, notesArray) {
     let filteredResults = notesArray;
@@ -65,6 +67,10 @@ app.get('/api/notes/:id', (req, res) => {
     } else {
         res.send(404);
     }
+});
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/index.html'));
 });
 
 // Routes Post
