@@ -1,5 +1,7 @@
 const express = require('express');
 const { notes } = require('./data/notes');
+const fs = require('fs');
+const path = require('path');
 
 // Heroku
 const PORT = process.env.PORT || 3001;
@@ -26,6 +28,27 @@ function findById(id, notesArray) {
     return result;
 }
 
+function createNewNotes(body, notesArray) {
+    const notes = body;
+    notesArray.push(notes);
+    
+    fs.writeFileSync(
+        path.join(__dirname, './data/notes.json'),
+        JSON.stringify({ notes: notesArray }, null, 2)
+    );
+    return notes;
+}
+
+function validateNote(note) {
+    if (!note.title || typeof note.title !== 'string') {
+        return false;
+    }
+    if (!note.text || typeof note.text !== 'string') {
+        return false;
+    }
+    return false;
+}
+
 // Routes GET
 app.get('/api/notes', (req, res) => {
     let results = notes; 
@@ -46,9 +69,16 @@ app.get('/api/notes/:id', (req, res) => {
 
 // Routes Post
 app.post('/api/notes', (req, res) => {
-    // req.body is where our incoming content will be
-    console.log(req.body);
-    res.json(req.body);
+    // set id based on what the next index of the array will be
+    req.body.id = notes.length.toString();
+
+    // if any data in req.body is incorrect, send 400 error back
+    if (!validateNote(req.body)) {
+        res.status(400).send('The note is not properly formatted.');
+    } else {
+        const note = createNewNotes(req.body, notes);
+        res.json(notes);
+    }
 });
 
 app.listen(PORT, () => {
