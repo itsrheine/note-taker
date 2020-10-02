@@ -4,7 +4,7 @@ const { notes } = require('./data/notes');
 
 
 app.get('/api/notes', (req, res) => {
-    res.send('Hello!');
+    res.json(notes);
 });
 
 app.listen(3001, () => {
