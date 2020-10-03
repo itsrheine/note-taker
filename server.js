@@ -73,6 +73,10 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, './public/index.html'));
 });
 
+app.get('/notes', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/notes.html'));
+});
+
 // Routes Post
 app.post('/api/notes', (req, res) => {
     // set id based on what the next index of the array will be
