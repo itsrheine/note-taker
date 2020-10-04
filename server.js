@@ -46,7 +46,7 @@ function createNewNotes(body, notesArray) {
     
     fs.writeFileSync(
         path.join(__dirname, './db/db.json'),
-        JSON.stringify({ notes: notesArray }, null, 2)
+        JSON.stringify(notes, null, 2)
     );
     return notes;
 }
@@ -101,7 +101,7 @@ app.delete('/api/notes/:id', (req, res) => {
     notes.splice(index, 1);
     fs.writeFileSync(
         path.join(__dirname, './db/db.json'),
-        JSON.stringify({ notes: notesArray }, null, 2)
+        JSON.stringify(notes, null, 2)
     );
     return notes;
 })
