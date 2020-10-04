@@ -56,7 +56,8 @@ app.post('/api/notes', (req, res) => {
 
 // Delete Notes
 app.delete('/api/notes/:id', (req, res) => {
-    notes.splice(req.params.id, 1);
+    notes.splice(req.params.id, 1); 
+    res.json({ok:true});
     fs.writeFileSync(
         path.join(__dirname, '/db/db.json'),
         JSON.stringify( notes, null, 2)
