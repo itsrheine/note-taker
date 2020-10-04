@@ -20,7 +20,8 @@
   "homepage": "https://github.com/itsrheine/zookeepr#readme",
   "dependencies": {
     "db-json": "^0.1.0",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "uniqid": "^5.2.0"
   },
   "devDependencies": {
     "jest": "^26.4.2"

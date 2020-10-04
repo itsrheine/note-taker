@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { Notes } = require('../../lib/Notes.js');
+const { Notes } = require('../../assets/js/index.js');
 
 router.get('/notes', (req, res) => {
     let results = notes;
