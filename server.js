@@ -15,104 +15,53 @@ app.use(express.json());
 // html static route
 app.use(express.static('public'));
 
-
-function filterByQuery(query, notesArray) {
-    let filteredResults = notesArray;
-    if (query.title) {
-        filteredResults = filteredResults.filter(notes => notes.title === query.title);
-    }
-    if (query.text) {
-        filteredResults = filteredResults.filter(notes => notes.text === query.text);
-    }
-    return filteredResults;
-}
-
-function findById(id, notesArray) {
-    const result = notesArray.filter(notes => notes.id === id)[0];
-    return result;
-}
-
-function findIndexById(id, notes) {
-    for (let i = 0; i < notes.length; i++) {
-        if (id === notes[i].id) {
-            return i;
-        }
-    }
-}
-
-function createNewNotes(body, notesArray) {
-    const notes = body;
-    notesArray.push(notes);
-    
-    fs.writeFileSync(
-        path.join(__dirname, './db/db.json'),
-        JSON.stringify(notes, null, 2)
-    );
-    return notes;
-}
-
-function validateNote(note) {
-    if (!note.title || typeof note.title !== 'string') {
-        return false;
-    }
-    if (!note.text || typeof note.text !== 'string') {
-        return false;
-    }
-    return false;
-}
-
-// Routes GET
+// Route GET to connect to HTML
 app.get('/api/notes', (req, res) => {
-    let results = notes; 
-    if (req.query) {
-        results = filterByQuery(req.query, results);
-    }
-    res.json(results);
+    res.sendFile(path.join(__dirname, '/db/db.json'));
 });
 
 app.get('/api/notes/:id', (req, res) => {
-    const result = findById(req.params.id, notes);
-    if (result) {
-        res.json(result);
-    } else {
-        res.send(404);
-    }
+    const results = findById(req.params.id, notes);
+    res.json(results);
+});
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '/public/index.html'));
+});
+
+app.get('/notes', (req, res) => {
+    res.sendFile(path.join(__dirname, '/public/notes.html'));
 });
 
 // Routes Post
 app.post('/api/notes', (req, res) => {
     // set id based on what the next index of the array will be
-    req.body.id = uniqid();
+    let newId = uniqid();
+    let newNote = req.body;
+    newNote.id = newId;
+    
+    fs.readFile('./db/db.json', (err, data) => {
+        if (err) throw err;
 
-    // if any data in req.body is incorrect, send 400 error back
-    if (!validateNote(req.body)) {
-        res.status(400).send('The note is missing a title and contents.');
-    } else {
-        const note = createNewNotes(req.body, notes);
-        res.json(note);
-    }
+        const db = JSON.parse(data);
+        db.push(newNote);
+
+        fs.writeFile('./db/db.json', JSON.stringify(db), "utf8", err => {
+            if (err) throw err;
+            console.log("The data has been saved to the file!");
+        });
+    })
+    res.redirect('/notes');
 });
 
-// to delete notes
+// Delete Notes
 app.delete('/api/notes/:id', (req, res) => {
-    const deleteNoteId = req.params.id;
-    const result = findIndexById(id, notes);
-
-    notes.splice(index, 1);
+    notes.splice(req.params.id, 1);
     fs.writeFileSync(
-        path.join(__dirname, './db/db.json'),
-        JSON.stringify({ notes, null, 2)
+        path.join(__dirname, '/db/db.json'),
+        JSON.stringify( notes, null, 2)
     );
     return notes;
-})
-
-// Route GET to connect to HTML
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, './public/index.html'));
-});
-
-app.get('/notes', (req, res) => {
-    res.sendFile(path.join(__dirname, './public/notes.html'));
 });
 
 // terminal 
