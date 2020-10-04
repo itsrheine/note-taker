@@ -32,6 +32,14 @@ function findById(id, notesArray) {
     return result;
 }
 
+function findIndexById(id, notes) {
+    for (let i = 0; i < notes.length; i++) {
+        if (id === notes[i].id) {
+            return i;
+        }
+    }
+}
+
 function createNewNotes(body, notesArray) {
     const notes = body;
     notesArray.push(notes);
@@ -84,6 +92,19 @@ app.post('/api/notes', (req, res) => {
         res.json(note);
     }
 });
+
+// to delete notes
+app.delete('/api/notes/:id', (req, res) => {
+    const deleteNoteId = req.params.id;
+    const result = findIndexById(id, notes);
+
+    notes.splice(index, 1);
+    fs.writeFileSync(
+        path.join(__dirname, './db/db.json'),
+        JSON.stringify({ notes: notesArray }, null, 2)
+    );
+    return notes;
+})
 
 // Route GET to connect to HTML
 app.get('/', (req, res) => {
